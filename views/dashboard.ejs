@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .add-car-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: block;
+            width: fit-content;
+        }
+
+        .add-car-button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-container {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+
+        .form-container label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .form-container input[type="text"],
+        .form-container input[type="number"],
+        .form-container input[type="file"],
+        .form-container button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .submit-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .car-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .car-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: calc(33.333% - 20px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .car-card img {
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+        }
+
+        .car-details {
+            padding: 15px;
+        }
+
+        .car-details h4 {
+            margin: 10px 0 5px;
+            font-size: 1.2em;
+        }
+
+        .car-details p {
+            margin: 0;
+            color: #666;
+        }
+
+        .car-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+        }
+
+        .edit-button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .edit-button:hover {
+            background-color: #218838;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        /* Modal Styling */
+        .image-modal, .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #333;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .car-card {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .car-card {
+                width: 100%;
+            }
+
+            .add-car-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header', { email: email, username: username }) %>
+
+
+    <div class="main-content">
+        <button class="add-car-button" onclick="document.getElementById('addCarForm').style.display='block'">Add Car</button>
+
+        <div id="addCarForm" class="form-container" style="display: none;">
+            <form action="/addCar" method="POST" enctype="multipart/form-data">
+                <label for="name">Car Name:</label>
+                <input type="text" id="name" name="name" required>
+                
+                <label for="model">Car Model:</label>
+                <input type="text" id="model" name="model" required>
+                
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" required>
+                
+                <label for="image">Image:</label>
+                <input type="file" id="image" name="image" required>
+                
+                <button type="submit" class="submit-button">Add Car</button>
+            </form>
+        </div>
+
+        <div class="car-list">
+            <% cars.forEach(car => { %>
+                <div class="car-card">
+                    <img src="<%= car.image %>" alt="Car Image" class="car-image" onclick="openImageModal('<%= car.image %>')">
+                    <div class="car-details">
+                        <h4><%= car.name %> (<%= car.model %>)</h4>
+                        <p>Price: $<%= car.price %></p>
+                        <div class="car-actions">
+                            <a href="/editCar/<%= car._id %>" class="edit-button">&#9998; Edit</a>
+                            <a href="/deleteCar/<%= car._id %>" class="delete-button">&#10060; Delete</a>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+
+    <div id="imageModal" class="image-modal">
+        <span class="close-button" onclick="closeImageModal()">&times;</span>
+        <img id="zoomedImage" src="" alt="Zoomed Car Image">
+    </div>
+
+    <div id="editCarModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeEditCarModal()">&times;</span>
+            <form id="editCarForm" method="POST" enctype="multipart/form-data">
+                <label for="editName">Car Name:</label>
+                <input type="text" id="editName" name="name" required>
+                
+                <label for="editModel">Car Model:</label>
+                <input type="text" id="editModel" name="model" required>
+                
+                <label for="editPrice">Price:</label>
+                <input type="number" id="editPrice" name="price" required>
+                
+                <label for="editImage">Image:</label>
+                <input type="file" id="editImage" name="image">
+                
+                <button type="submit" class="submit-button">Update Car</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openImageModal(imageSrc) {
+            document.getElementById('zoomedImage').src = imageSrc;
+            document.getElementById('imageModal').style.display = 'flex';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        function openEditCarModal(carId, name, model, price, imageUrl) {
+            document.getElementById('editCarModal').style.display = 'block';
+            document.getElementById('editCarForm').action = '/editCar/' + carId;
+            document.getElementById('editName').value = name;
+            document.getElementById('editModel').value = model;
+            document.getElementById('editPrice').value = price;
+        }
+
+        function closeEditCarModal() {
+            document.getElementById('editCarModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

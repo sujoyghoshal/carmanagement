@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Car Management Project</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        .about {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #444;
+            position: relative;
+        }
+
+        ul li::before {
+            content: "✔";
+            color: #2a9d8f;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .about {
+                margin: 20px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            p, ul li {
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header', { email: email }) %>
+
+    <main>
+        <section class="about">
+            <h1>About the Car Management Project</h1>
+            <p>Welcome to the Car Management Project! This project is designed to streamline and simplify the process of managing cars, whether for individual use or for a car rental or dealership business. Key features include vehicle tracking, maintenance scheduling, and easy access to essential car details.</p>
+            <p>The Car Management Project enables users to:</p>
+            <ul>
+                <li>Register and manage cars in a centralized system</li>
+                <li>Track car maintenance and service history</li>
+                <li>Organize and categorize cars by model, year, and condition</li>
+                <li>Monitor usage and availability for businesses</li>
+            </ul>
+            <p>Our goal is to make car management easy, efficient, and accessible. Thank you for choosing the Car Management Project to handle your automotive needs!</p>
+        </section>
+    </main>
+
+    <%- include('partials/footer') %>
+</body>
+</html>
